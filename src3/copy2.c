@@ -15,7 +15,7 @@ int main(void)
     }
 
     // Allocate memory for another string
-    char *t = malloc((strlen(s) + 1) * sizeof(char));
+    char *t = malloc(strlen(s) + 1);
     if (!t)
     {
         return 1;
