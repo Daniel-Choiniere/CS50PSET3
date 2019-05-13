@@ -79,9 +79,7 @@ int main(int argc, char *argv[])
             {
                 triple.rgbtRed = 0x00;
                 triple.rgbtGreen = 0x00;
-
             }
-
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
