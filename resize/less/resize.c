@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     int newPadding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // update the header info for the new file
-    bi.biSizeImage = (sizeof(RGBTRIPLE * newWidth) + newPadding) * abs(newHeight);
+    bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
     // write outfile's BITMAPFILEHEADER
@@ -109,7 +109,6 @@ int main(int argc, char *argv[])
 
         // skip over old padding, if any
         fseek(inptr, padding, SEEK_CUR);
-
     }
 
     // close infile
