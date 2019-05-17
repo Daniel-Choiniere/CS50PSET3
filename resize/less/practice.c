@@ -27,9 +27,9 @@ int main(void)
 
     // the ampersand "&" tells you to give you the memory address of the variable not the value
     int* intPointer = &b;
-    // printf("b is %i\n", b);
+    printf("b is %i\n", b);
 
     //now go to that memory address and get that value
     *intPointer += 4;
-    // printf("now b is %i\n", b);
+    printf("now b is %i\n", b);
 }
