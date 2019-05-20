@@ -70,10 +70,10 @@ int main(int argc, char *argv[])
     int padding =  (4 - (ogWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // new padding
-    int newPadding = (4 - (bi.biWidth) * sizeof(RGBTRIPLE)) % 4) % 4;
+    int newPadding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // update the header info for the new file
-    bi.biSizeImage = ((sizeof(RGBTRIPLE * newWidth) + newPadding) * abs(newHeight);
+    bi.biSizeImage = (sizeof(RGBTRIPLE * newWidth) + newPadding) * abs(newHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
     // write outfile's BITMAPFILEHEADER
@@ -101,14 +101,15 @@ int main(int argc, char *argv[])
             fwrite(&triple, sizeof(RGBTRIPLE), 2, outptr);
         }
 
-        // skip over old padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
         // add the new padding back in if needed
         for (int k = 0; k < newPadding; k++)
         {
             fputc(0x00, outptr);
         }
+
+        // skip over old padding, if any
+        fseek(inptr, padding, SEEK_CUR);
+
     }
 
     // close infile
