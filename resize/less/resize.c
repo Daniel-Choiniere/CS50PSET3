@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     int padding =  (4 - (ogWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // new padding
-    int newPadding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+    int newPadding = (4 - (newWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
     // update the header info for the new file
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
@@ -96,9 +96,12 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-
-            // write RGB triple to outfile
-            fwrite(&triple, sizeof(RGBTRIPLE), 2, outptr);
+            // resize the width of image horizontally
+            for (int K = 0; K < factor; K++)
+            {
+                // write RGB triple to outfile
+                fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+            }
         }
 
         // add the new padding back in if needed
