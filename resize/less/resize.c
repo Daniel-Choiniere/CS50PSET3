@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
             // resize the width of image horizontally
-            for (int K = 0; K < factor; K++)
+            for (int K = 0; K < resizefactor; K++)
             {
                 // write RGB triple to outfile
                 fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
