@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
     // new padding
     int newPadding = (4 - (newWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
+    // already got data we needed from ogfile, can now set new height and width to biWidth and biHeight
+    bi.biHeight = newHeight;
+    bi.biWidth = newWidth;
+
     // update the header info for the new file
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
@@ -82,13 +86,11 @@ int main(int argc, char *argv[])
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
 
-
-
     // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
+    for (int i = 0, biHeight = abs(ogHeight); i < biHeight; i++)
     {
         // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
+        for (int j = 0; j < ogWidth; j++)
         {
             // temporary storage
             RGBTRIPLE triple;
@@ -97,21 +99,21 @@ int main(int argc, char *argv[])
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
             // resize the width of image horizontally
-            for (int K = 0; K < resizefactor; K++)
+            for (int K = 0; K < resizeFactor; K++)
             {
                 // write RGB triple to outfile
                 fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
             }
         }
 
+        // skip over old padding, if any
+        fseek(inptr, padding, SEEK_CUR);
+
         // add the new padding back in if needed
         for (int k = 0; k < newPadding; k++)
         {
             fputc(0x00, outptr);
         }
-
-        // skip over old padding, if any
-        fseek(inptr, padding, SEEK_CUR);
     }
 
     // close infile
