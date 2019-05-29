@@ -2,7 +2,6 @@
 #include <cs50.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "bmp.h"
 
 int main(int argc, char *argv[])
@@ -57,6 +56,11 @@ int main(int argc, char *argv[])
         return 4;
     }
 
+    // printf("%d\n", bi.biWidth);
+    // printf("%d\n", bi.biHeight);
+    // printf("%d\n", bi.biSizeImage);
+    // printf("%d\n", bf.bfSize);
+
     // get the width and height of the original image
     int ogWidth = bi.biWidth;
     int ogHeight = bi.biHeight;
@@ -80,6 +84,11 @@ int main(int argc, char *argv[])
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
+    // printf("%d\n", bi.biWidth);
+    // printf("%d\n", bi.biHeight);
+    // printf("%d\n", bi.biSizeImage);
+    // printf("%d\n", bf.bfSize);
+
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
@@ -89,6 +98,8 @@ int main(int argc, char *argv[])
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(ogHeight); i < biHeight; i++)
     {
+        // set up an array to store each row of pixels
+
         // iterate over pixels in scanline
         for (int j = 0; j < ogWidth; j++)
         {
@@ -99,7 +110,7 @@ int main(int argc, char *argv[])
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
             // resize the width of image horizontally
-            for (int K = 0; K < resizeFactor; K++)
+            for (int k = 0; k < resizeFactor; k++)
             {
                 // write RGB triple to outfile
                 fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
