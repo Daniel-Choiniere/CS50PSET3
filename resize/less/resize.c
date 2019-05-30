@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    // ensure proper usage
+    // ensure proper usage - check to make sure user is entering exactly four argumnets (the filename of this program, the resize factor, the infile, and the outfile)
     if (argc != 4)
     {
         // printf("%i\n", argc);
@@ -15,10 +15,13 @@ int main(int argc, char *argv[])
     }
 
     // change the input to a number so we can work with it
+    // the resizeFactor we got from the user is the second argument
     int resizeFactor = atoi(argv[1]);
 
     // remember filenames
+    // infile is the third argument
     char *infile = argv[2];
+    // outfile is the fourthg argumnet
     char *outfile = argv[3];
 
     // open input file
@@ -56,16 +59,12 @@ int main(int argc, char *argv[])
         return 4;
     }
 
-    // printf("%d\n", bi.biWidth);
-    // printf("%d\n", bi.biHeight);
-    // printf("%d\n", bi.biSizeImage);
-    // printf("%d\n", bf.bfSize);
-
     // get the width and height of the original image
     int ogWidth = bi.biWidth;
-    int ogHeight = bi.biHeight;
+    // we need to get the absolute (positive number) of the height, because in some cases it will be negative and we want it to always be positive
+    int ogHeight = abs(bi.biHeight);
 
-    // intialize the height and width for the new file
+    // intialize the height and width for the new file (calculte the new dimensions by * by resizeFactor)
     int newWidth = bi.biWidth * resizeFactor;
     int newHeight = bi.biHeight * resizeFactor;
 
@@ -76,18 +75,11 @@ int main(int argc, char *argv[])
     // new padding
     int newPadding = (4 - (newWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
-    // already got data we needed from ogfile, can now set new height and width to biWidth and biHeight
+    // update the header info for the new file
     bi.biHeight = newHeight;
     bi.biWidth = newWidth;
-
-    // update the header info for the new file
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
     bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
-    // printf("%d\n", bi.biWidth);
-    // printf("%d\n", bi.biHeight);
-    // printf("%d\n", bi.biSizeImage);
-    // printf("%d\n", bf.bfSize);
 
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
@@ -95,11 +87,12 @@ int main(int argc, char *argv[])
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
 
+    // declare an array for storing the entire row to be written.
+    RGBTRIPLE wholeRow[bi.biWidth];
+
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(ogHeight); i < biHeight; i++)
     {
-        // set up an array to store each row of pixels
-
         // iterate over pixels in scanline
         for (int j = 0; j < ogWidth; j++)
         {
@@ -109,22 +102,27 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            // resize the width of image horizontally
+            // creating the array by writing the pixel 'resizeFactor' number of times
             for (int k = 0; k < resizeFactor; k++)
             {
-                // write RGB triple to outfile
-                fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+                wholeRow[k + (resizeFactor * j)] = triple;
             }
         }
 
-        // skip over old padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
-        // add the new padding back in if needed
-        for (int k = 0; k < newPadding; k++)
+        for (int j = 0; j < resizeFactor; j++)
         {
-            fputc(0x00, outptr);
+            // write out the built array 'resizeFactor' amount of times
+            fwrite(wholeRow, sizeof(wholeRow), 1, outptr);
+
+            // add the new padding back in if needed
+            for (int k = 0; k < newPadding; k++)
+            {
+                fputc(0x00, outptr);
+            }
         }
+
+        // skip over padding, if any
+        fseek(inptr, padding, SEEK_CUR);
     }
 
     // close infile
