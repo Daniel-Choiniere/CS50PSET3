@@ -70,8 +70,7 @@ int main(int argc, char *argv[])
 
     // deal with padding if necessary
     // old padding
-    int padding =  (4 - (ogWidth * sizeof(RGBTRIPLE)) % 4) % 4;
-
+    int padding = (4 - (ogWidth * sizeof(RGBTRIPLE)) % 4) % 4;
     // new padding
     int newPadding = (4 - (newWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
