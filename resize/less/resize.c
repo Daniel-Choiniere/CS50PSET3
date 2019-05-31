@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     // remember filenames
     // infile is the third argument
     char *infile = argv[2];
-    // outfile is the fourthg argumnet
+    // outfile is the fourth argument
     char *outfile = argv[3];
 
     // open input file
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     // we need to get the absolute (positive number) of the height, because in some cases it will be negative and we want it to always be positive
     int ogHeight = abs(bi.biHeight);
 
-    // intialize the height and width for the new file (calculte the new dimensions by * by resizeFactor)
+    // intialize the height and width for the new file (calculte the new dimensions by multiplying by resizeFactor)
     int newWidth = bi.biWidth * resizeFactor;
     int newHeight = bi.biHeight * resizeFactor;
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     // new padding
     int newPadding = (4 - (newWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
-    // update the header info for the new file
+    // update the header info for the new file, chnage the bi.biHeight and bi.biWidh, etc. to be the updated parameters
     bi.biHeight = newHeight;
     bi.biWidth = newWidth;
     bi.biSizeImage = ((sizeof(RGBTRIPLE) * newWidth) + newPadding) * abs(newHeight);
