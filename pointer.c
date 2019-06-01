@@ -3,29 +3,29 @@
 
 // struct called node containing an int identified as 'value',
 // refernece to another node identfied as 'next'
-
-typedef struct
+typedef struct NODE
 {
-    int VALUE;
+    int value;
     struct NODE *next;
 } NODE;
 
 
-
-int add(int *x, int y)
+void addNode(int value, NODE *homeNode)
 {
-    *x += 3;
-    return *x + y;
+    NODE *newNode = malloc(sizeof(NODE));
+    newNode->value = value;
+    newNode->next = NULL;
+    homeNode->next = newNode;
 }
 
 int main(void)
 {
-    // int a = 5;
-    // int b = 10;
-    // printf("the total is: %i\n", add(&a, b));
-    // printf("the total is: %i\n", add(&a, b));
-
     NODE rootNode;
-    rootNode.VALUE = 5;
-    printf("%i\n", rootNode.VALUE);
+    rootNode.value = 5;
+    rootNode.next = NULL;
+
+    addNode(10, &rootNode);
+
+    printf("%i\n", rootNode.value);
+    printf("%i\n", rootNode.next->value);
 }
