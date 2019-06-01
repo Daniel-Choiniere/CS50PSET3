@@ -1,3 +1,4 @@
+#include <cs50.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
 
     // remember filenames
     // infile is the second argument
-    char *infile = argv[2];
+    char *infile = argv[1];
 
     // open input file
     FILE *inptr = fopen(infile, "r");
@@ -29,5 +30,15 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
+    } else
+    {
+        fprintf(stderr, "Opened: %s\n", infile);
+        fread(&infile, 1, 512, inptr);
     }
+
+
+    // open the new JPEG file
+    sprintf(fiename, "%00.jpg", 2);
+    // write the new JPEG FILE
+    fwrite(data, size, number, outptr);
 }
