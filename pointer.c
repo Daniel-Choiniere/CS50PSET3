@@ -32,10 +32,25 @@ void addNode(int value, NODE *homeNode)
     }
 }
 
+
     // iterate through the list and print each number until you hit the end i.e. 5, 10, 8, 17)
 void displayList(NODE *trav)
+
 {
-    printf("Hello!\n");
+    while (trav != NULL)
+    {
+        printf("%d", trav->value);
+        trav = trav->next;
+
+        if (trav == NULL)
+        {
+            printf("");
+        } else {
+            printf(", ");
+        }
+    }
+
+    printf("\n");
 }
 
 int main(void)
@@ -45,12 +60,13 @@ int main(void)
     rootNode.next = NULL;
 
     addNode(10, &rootNode);
+    addNode(8, &rootNode);
+    addNode(17, &rootNode);
 
     // printf("%i\n", rootNode.value);
     // printf("%i\n", rootNode.next->value);
-
-    addNode(8, &rootNode);
-    addNode(17, &rootNode);
+    // printf("%i\n", rootNode.next->next->value);
+    // printf("%i\n", rootNode.next->next->next->value);
 
     // GOAL IS TO GET THE NUMBERS TO BE DISPLAYED ONE BY ONE
     displayList(&rootNode);

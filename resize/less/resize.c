@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     // outfile is the fourth argument
     char *outfile = argv[3];
 
-    // open input file
+    // open input file as read only
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
     {

@@ -32,18 +32,34 @@ int main(int argc, char *argv[])
     // infile is the second argument
     char *infile = argv[1];
 
+    char buffer[512];
+
     // open input file
-    FILE *inptr = fopen(infile, "r");
-    if (inptr == NULL)
+    FILE *fileToRead = fopen(infile, "r");
+    if (fileToRead == NULL)
     {
         fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
     } else
     {
-        fprintf(stderr, "Opened: %s\n", infile);
-        fread(&infile, 1, 512, inptr);
-    }
+        fread(buffer, sizeof(buffer), 1, inptr);
 
+
+
+
+        fprintf(stderr, "Opened: %s\n", infile);
+
+
+        // fread(buffer, 512, 1, fileToRead);
+
+        // if (buffer[0] == 0xff &&
+        //     buffer[1] == 0xd8 &&
+        //     buffer[2] == 0xff &&
+        //     (buffer[3] & 0xf0) == 0xe0)
+        // {
+        //     printf("There is a JPEG!");
+        // }
+    }
 
 
     // // create a filename for the new JPEG file
