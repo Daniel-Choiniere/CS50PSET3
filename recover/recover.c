@@ -16,8 +16,20 @@
         // no -->
 // close any remaing files
 
+
+// // create a filename for the new JPEG file
+// sprintf(fiename, "%00.jpg", 2);
+
+// // open the new JPEG file so we can work with it
+// ex) FILE *img = fopen(filename, "w");
+
+// // now that the new file is open we need to write each JPEG 512 bytes at a time
+// fwrite(data, size, number, outptr);
+// ex) fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr) *outptr is the file we just created
+
 int main(int argc, char *argv[])
 {
+    // make sure the user only entered two arguments (the filename + the file to recover)
      if (argc != 2)
     {
         // printf("%i\n", argc);
@@ -25,14 +37,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // change the input to a number so we can work with it
-    int resizeFactor = atoi(argv[1]);
-
-    // remember filenames
-    // infile is the second argument
+    // remember filename
+    // the infile is the second argument
     char *infile = argv[1];
-
-    char buffer[512];
 
     // open input file
     FILE *fileToRead = fopen(infile, "r");
@@ -40,38 +47,60 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
-    } else
-    {
-        fread(buffer, sizeof(buffer), 1, inptr);
-
-
-
-
-        fprintf(stderr, "Opened: %s\n", infile);
-
-
-        // fread(buffer, 512, 1, fileToRead);
-
-        // if (buffer[0] == 0xff &&
-        //     buffer[1] == 0xd8 &&
-        //     buffer[2] == 0xff &&
-        //     (buffer[3] & 0xf0) == 0xe0)
-        // {
-        //     printf("There is a JPEG!");
-        // }
     }
 
+        // create an empty 512 byte array to be able to look at the first few bytes of each chunk
+    unsigned char buffer[512];
 
-    // // create a filename for the new JPEG file
-    // sprintf(fiename, "%00.jpg", 2);
+    // make a fileCounter to increase the file number each time a file is written
+    int fileCounter = 0;
 
-    // // open the new JPEG file so we can work with it
-    // ex) FILE *img = fopen(filename, "w");
+    // name of the new JPEG is stored in this array
+    char recoveredPicName[8];
 
-    // // now that the new file is open we need to write each JPEG 512 bytes at a time
-    // fwrite(data, size, number, outptr);
-    // ex) fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr) *outptr is the file we just created
+    FILE *recoveredImg;
 
+    while (fread(buffer, sizeof(buffer), 1, fileToRead) == 1)
+    {
+        if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
+        {
+            // if we already have a previous img file open, close it
+            if (fileCounter > 0)
+            {
+                fclose(recoveredImg);
 
+                // name the new img file using sprintf
+                sprintf(recoveredPicName,"%03d.jpg", fileCounter);
 
+                // increase the counter by one for the next file name/number
+                fileCounter ++;
+
+                // open the newfile to write to
+                recoveredImg = fopen(recoveredPicName, "w");
+
+                // write to the newfile
+                fwrite(buffer, sizeof(buffer), 1, recoveredImg);
+            }
+            if (fileCounter == 0)
+            {
+                sprintf(recoveredPicName,"%03d.jpg", fileCounter);
+
+                fileCounter ++;
+
+                recoveredImg = fopen(recoveredPicName, "w");
+
+                fwrite(buffer, sizeof(buffer), 1, recoveredImg);
+            }
+        }
+        else if (fileCounter > 0)
+        {
+            fwrite(buffer, sizeof(buffer), 1, recoveredImg);
+        }
+    }
+
+    // close out files, and end program succesfully
+    fclose(recoveredImg);
+    fclose(fileToRead);
+
+    return 0;
 }

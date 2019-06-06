@@ -29,14 +29,13 @@ void addNode(int value)
     {
         trav = trav->next;
     }
-
 }
 
 
     // iterate through the list and print each number until you hit the end i.e. 5, 10, 8, 17)
 void displayList()
 {
-    NODE *trav;
+    NODE *trav = NULL;
     while (trav != NULL)
     {
         printf("%d", trav->value);
