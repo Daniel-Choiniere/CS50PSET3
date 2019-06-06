@@ -4,20 +4,20 @@
 
 // open the memory card file
 // repeat until end of the card
-    // read 512 bytes at a time
-    // find the beginning of JPEG
-        // yes -->
-            // open a new JPEG
-            // write 512 bytes until the new JPEG is found
-            // detect the end of the file
-        // no -->
-    // already found a JPEG
-        // yes -->
-        // no -->
-// close any remaing files
+// read 512 bytes at a time
+// find the beginning of JPEG
+//      yes -->
+//          open a new JPEG
+//  write 512 bytes until the new JPEG is found
+//  detect the end of the file
+//       no -->
+//          already found a JPEG
+//      yes -->
+//      no -->
+//  close any remaing files
 
 
-// // create a filename for the new JPEG file
+// create a filename for the new JPEG file
 // sprintf(fiename, "%00.jpg", 2);
 
 // // open the new JPEG file so we can work with it
@@ -30,7 +30,7 @@
 int main(int argc, char *argv[])
 {
     // make sure the user only entered two arguments (the filename + the file to recover)
-     if (argc != 2)
+    if (argc != 2)
     {
         // printf("%i\n", argc);
         fprintf(stderr, "Usage: ./recover image\n");
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-        // create an empty 512 byte array to be able to look at the first few bytes of each chunk
+    // create an empty 512 byte array to be able to look at the first few bytes of each chunk
     unsigned char buffer[512];
 
     // make a fileCounter to increase the file number each time a file is written
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
                 fclose(recoveredImg);
 
                 // name the new img file using sprintf
-                sprintf(recoveredPicName,"%03d.jpg", fileCounter);
+                sprintf(recoveredPicName, "%03d.jpg", fileCounter);
 
                 // increase the counter by one for the next file name/number
                 fileCounter ++;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
             }
             if (fileCounter == 0)
             {
-                sprintf(recoveredPicName,"%03d.jpg", fileCounter);
+                sprintf(recoveredPicName, "%03d.jpg", fileCounter);
 
                 fileCounter ++;
 
