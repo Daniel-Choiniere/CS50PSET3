@@ -58,8 +58,10 @@ int main(int argc, char *argv[])
     // name of the new JPEG is stored in this array
     char recoveredPicName[8];
 
+    // make an empty File to be able to fill when iterating through
     FILE *recoveredImg;
 
+    // reads data from the given stream (i.e. fileToRead) into the array pointed to, (i.e. buffer)
     while (fread(buffer, sizeof(buffer), 1, fileToRead) == 1)
     {
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
@@ -69,7 +71,8 @@ int main(int argc, char *argv[])
             {
                 fclose(recoveredImg);
 
-                // name the new img file using sprintf
+                // names the new img file using sprintf
+                // sends formatted output to a string pointed to, by str. (i.e. recoveredPicName)
                 sprintf(recoveredPicName, "%03d.jpg", fileCounter);
 
                 // increase the counter by one for the next file name/number
@@ -79,6 +82,7 @@ int main(int argc, char *argv[])
                 recoveredImg = fopen(recoveredPicName, "w");
 
                 // write to the newfile
+                // writes data from the array pointed to, (i.e. buffer) to the given streamn (i.e. recoveredImg).
                 fwrite(buffer, sizeof(buffer), 1, recoveredImg);
             }
             if (fileCounter == 0)
