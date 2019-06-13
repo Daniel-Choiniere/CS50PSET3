@@ -64,11 +64,13 @@ int main(int argc, char *argv[])
     // reads data from the given stream (i.e. fileToRead) into the array pointed to, (i.e. buffer)
     while (fread(buffer, sizeof(buffer), 1, fileToRead) == 1)
     {
+        // checks the first three bytes, and the last bit of the header to see if it is a JPEG image
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
             // if we already have a previous img file open, close it
             if (fileCounter > 0)
             {
+                // close the already open file img file
                 fclose(recoveredImg);
 
                 // names the new img file using sprintf
